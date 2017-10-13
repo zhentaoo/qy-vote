@@ -1,0 +1,9 @@
+{
+  "name": "qy-vote",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "server": "node ./server/bin/www",
+    "client": "n"
+  }
+}
