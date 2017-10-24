@@ -30,10 +30,29 @@ export default class extends think.controller.rest {
    * before magic method
    * @return {Promise} []
    */
-  __before(){
+  __before() {
     this.header('Access-Control-Allow-Origin', '*');
     this.header('Access-Control-Allow-Headers', 'x-requested-with');
     this.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
     this.header('Access-Control-Allow-Credentials', 'true');
+  }
+
+  async postAction() {
+    console.log('data:', this.post());
+
+    return this.success({id: this.data});
+  }
+
+  async putAction() {
+    console.log("id:", this.id);
+    console.log('data:', this.post());
+
+    let rows = await this.modelInstance.where({_id: this.id}).update(this.post());
+    return this.success({id: this.id});
+  }
+
+  async deleteAction() {
+    console.log('delete:', this.id);
+    return this.fail('can not delete');
   }
 }
