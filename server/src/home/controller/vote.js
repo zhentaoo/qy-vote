@@ -26,8 +26,6 @@ export default class extends think.controller.rest {
     super.init(http);
   }
 
-
-
   /**
    * before magic method
    * @return {Promise} []

@@ -1,4 +1,4 @@
-# xx
+# vote
 
 > A Vue.js project
 
