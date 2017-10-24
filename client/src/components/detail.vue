@@ -4,10 +4,10 @@
     <div class="" >
       <form >
         <div v-for="n in choice" class="choice">
-          <input type="radio" v-model="checkedNames" name="choice" >{{n}}
+          <input type="radio" v-model="checkedNames" :value="n" name="choice" >{{n}}
         </div>
       </form>
-      {{checkedNames}}
+      --{{checkedNames}}--
       <button type="button" name="button" @click="vote">我要投给Ta！</button>
     </div>
   </div>
