@@ -17,42 +17,84 @@
  * @type {Class}
  */
 export default class extends think.controller.rest {
-  /**
+    /**
    * init
    * @param  {Object} http []
    * @return {}      []
    */
-  init(http){
-    super.init(http);
-  }
+    init(http) {
+        super.init(http);
+    }
 
-  /**
+    /**
    * before magic method
    * @return {Promise} []
    */
-  __before() {
-    this.header('Access-Control-Allow-Origin', '*');
-    this.header('Access-Control-Allow-Headers', 'x-requested-with');
-    this.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
-    this.header('Access-Control-Allow-Credentials', 'true');
-  }
+    __before() {
+        this.header('Access-Control-Allow-Origin', '*');
+        this.header('Access-Control-Allow-Headers', 'x-requested-with');
+        this.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
+        this.header('Access-Control-Allow-Credentials', 'true');
+    }
 
-  async postAction() {
-    console.log('data:', this.post());
+    // 新建投票
+    /**
+    fetch('http://10.12.59.81:8360/home/vote', {
+      method: 'POST',
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: "VoteInfo="+JSON.stringify({voteTitle: '测试', createUserKey: '我的天xxx', choiceList: ['火影','柯南','海贼']})
+    })
+    **/
+    async postAction() {
+        let pk = await this.modelInstance.getPk();
+        let data = this.post();
+        console.log(data);
 
-    return this.success({id: this.data});
-  }
+        delete data[pk];
+        if (think.isEmpty(data)) {
+            return this.fail('data is empty');
+        }
 
-  async putAction() {
-    console.log("id:", this.id);
-    console.log('data:', this.post());
+        data = JSON.parse(data.VoteInfo)
+        let insertId = await this.modelInstance.add({VoteInfo: data});
+        return this.success({_id: insertId});
+    }
 
-    let rows = await this.modelInstance.where({_id: this.id}).update(this.post());
-    return this.success({id: this.id});
-  }
+    // 投票，id，userkey，vote
+    /**
+    fetch('http://10.12.59.81:8360/home/vote/59f1e6a85b0a94884a8ca193', {
+      method: 'PUT',
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: "VoteResult="+JSON.stringify({vote: '海贼', userkey: '我的天xxx'})
+    })
 
-  async deleteAction() {
-    console.log('delete:', this.id);
-    return this.fail('can not delete');
-  }
+    fetch('http://10.12.59.81:8360/home/vote/59f1e6a85b0a94884a8ca193', {
+      method: 'PUT',
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: "VoteResult="+JSON.stringify({vote: '火影', userkey: '阿斯顿xxx'})
+    })
+    **/
+    async putAction(){
+      if (!this.id) {
+        return this.fail('params error');
+      }
+
+      let pk = await this.modelInstance.getPk();
+      let originData = await this.modelInstance.where({[pk]: this.id}).find().VoteResult || {};
+      console.log('originData:', originData);
+
+      console.log('this.post:', this.post());
+      let newData = JSON.parse(this.post().VoteResult);
+      let {userkey, vote} = newData;
+      console.log('newData:', newData);
+
+      let rows = await this.modelInstance.where({[pk]: this.id}).update({VoteResult: newData});
+      return this.success({affectedRows: rows});
+    }
+
+    // 禁止删除
+    async deleteAction() {
+        console.log('delete:', this.id);
+        return this.fail('can not delete');
+    }
 }
