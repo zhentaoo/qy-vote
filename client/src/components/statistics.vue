@@ -4,7 +4,7 @@
     <div class="" >
       <form >
         <div v-for="n in choice" class="choice">
-          <input type="radio" name="choice">{{n}}
+          <span>{{n}}</span>
         </div>
       </form>
       <button type="button" name="button" @click="vote">我要投给Ta！</button>

@@ -1,21 +1,29 @@
 <template lang="html">
-  <div class="">
+  <div >
+    <!-- <div class="name"> -->
+      <name v-if="showCreateName"></name>
+      <div class="username">
+        {{userName}}
+      </div>
+    <!-- </div> -->
     <h2>{{title}}</h2>
     <div class="" >
       <form >
         <div v-for="n in choice" class="choice">
-          <input type="radio" v-model="checkedNames" :value="n" name="choice" >{{n}}
+          <input type="radio" v-model="checkedName" :value="n" name="choice" ><span>{{n}}</span>
         </div>
       </form>
-      --{{checkedNames}}--
+      <!-- --{{checkedNames}}-- -->
       <button type="button" name="button" @click="vote">我要投给Ta！</button>
     </div>
   </div>
 
-
 </template>
 
 <script>
+import name from './name'
+import constants from '@/constants/index'
+
 export default {
   data(){
     return{
@@ -23,40 +31,78 @@ export default {
       choice:['火影忍着','海贼王','死神'],
       // choice:[],
       result:[],
-      checkedNames:''
+      checkedName:'',
+      showCreateName:true,
+      userName:'',
+      userKey:'',
     }
   },
+  components: {
+    name: name
+  },
   mounted:function(){
+    this.userName = localStorage.getItem('userName');
+    this.userKey = localStorage.getItem('userKey');
+    if(this.userName){
+
+      this.showCreateName=false;
+    }
     console.log(this.$route.query.id)
-    fetch('http://10.12.59.81:8360/home/vote/'+this.$route.query.id)
+    fetch(constants.domain+'/home/vote/'+this.$route.query.id)
       .then(el => el.json())
       .then(res => {
         console.error(res.data);
-        this.choice = JSON.parse(res.data.data).choiceList
-        this.title = JSON.parse(res.data.data).voteTitle
+        // this.choice = JSON.parse(res.data.VoteInfo).choiceList
+        this.choice = res.data.VoteInfo.choiceList
+        // this.title = JSON.parse(res.data.VoteInfo).voteTitle
+        this.title = res.data.VoteInfo.voteTitle
+
         console.log(this.choice)
       })
       .catch(err => {
+
+        this.$toast('系统异常')
       })
 
   },
   methods:{
     vote(){
-      // let
+
+
       // this.checked=
+      fetch(`${constants.domain}/home/vote/${this.$route.query.id}`, {
+        method: 'PUT',
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "VoteResult="+JSON.stringify({
+          userKey: this.userKey,
+          userName: this.userName,
+          vote:this.checkedName})
+      })
+        .then(el => el.json())
+        .then(res => {
+
+          this.list = res.data;
+          this.$router.push({path:`/statistics${this.$route.query.id}`})
+        })
+        .catch(err => {
+          this.$toast('系统异常')
+        })
+
 
     },
   }
 }
 </script>
+<style media="screen" src="../css/common.css"></style>
 
 <style lang="css">
 div h2{
-  color: blue;
+  margin-top: 70px;
+  color: #06afc5;
   text-align: center;
   font-weight: bold;
   font-size: 20px;
-  padding:10px 0 45px 0;
+  padding:10px 0 25px 0;
 }
 button{
   width: 200px;
@@ -75,12 +121,18 @@ button{
   margin:10px 20px 20px 0px;
   font-size: 18px;
   position: relative;
+  font-size: 14px;
+  text-align: left;
+}
+.choice span{
+  padding-left: 20%;
 }
 
 .choice input{
   position: absolute;
-  left: 42%
+  left: 10%
 }
+
 /*.choice input{
   width: 100px
 }*/

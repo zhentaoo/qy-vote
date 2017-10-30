@@ -6,7 +6,11 @@
     </div> -->
 
     <div class="">
-      <p v-for="n in list"><a :href="'#/detail?id='+n._id">{{n.data.voteTitle}}</a></p>
+      <p v-for="n in list">
+        <a :href="'#/detail?id='+n._id" v-if="n.VoteInfo">
+          {{n.VoteInfo.voteTitle}}
+        </a>
+      </p>
     </div>
 
     <button type="button" class="button">
@@ -19,6 +23,7 @@
 </template>
 
 <script>
+import constants from '@/constants/index'
 export default {
   data(){
     return{
@@ -27,18 +32,27 @@ export default {
     }
   },
   mounted(){
-    debugger
-    fetch('http://10.12.59.81:8360/home/vote')
+
+    // fetch('https://www.baidu.com')
+    fetch(`${constants.domain}/home/vote`)
       .then(el => el.json())
       .then(res => {
-        debugger
-        this.list = res.data.map(el => {
-          el.data = JSON.parse(el.data);
-          return el
-        });
+        // this.list = res.data
+        // this.list = res.data.map(el => {
+        //   try {
+        //
+        //     el.data = JSON.parse(el.data);
+        //   } catch (e) {
+        //
+        //   }
+        //   // el.data = JSON.parse(el.data);
+        //   return el
+        // });
+        this.list=res.data
         console.log(this.list);
       })
       .catch(err => {
+        this.$toast('系统异常')
       })
   },
   methods:{

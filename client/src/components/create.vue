@@ -1,11 +1,15 @@
 <template lang="html">
   <div class="">
+    <name v-if="showCreateName"></name>
+    <div class="username">
+      {{userName}}
+    </div>
     <h2>定制你需要的投票表单</h2>
-    <div style="margin-right:25%">
+    <div class="title">
       <span>标题：</span>
     </div>
     <input v-model="voteTitle" type="text" name="voteTitle" value="" placeholder="输入你投票的标题">
-    <div class="choiceTitle">
+    <div class="title">
       <span>选项：</span>
     </div>
     <div class="" v-for="n in form">
@@ -18,17 +22,33 @@
 
 </template>
 
+<style media="screen" src="../css/common.css"></style>
 <script>
+import name from './name'
+import constants from '@/constants/index'
 export default {
   data() {
     return {
       form: [1],
       choiceList:[],
-      voteTitle:''
+      voteTitle:'',
+      showCreateName:true,
+      userName:'',
+      userKey:''
     }
+  },
+  components: {
+    name: name
   },
   mounted(){
 
+    console.log(constants.domain);
+    this.userName = localStorage.getItem('userName');
+    this.userKey = localStorage.getItem('userKey');
+    if(this.userName){
+
+      this.showCreateName=false;
+    }
 
   },
   methods: {
@@ -43,15 +63,19 @@ export default {
 
       // var str ='&choiceList=' this.choiceList.join('&choiceList=')
 
-      fetch('http://10.12.59.81:8360/home/vote', {
+      fetch(constants.domain+'/home/vote', {
         method: 'POST',
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "data="+JSON.stringify({voteTitle: this.voteTitle, choiceList: this.choiceList})
+        body: "VoteInfo="+JSON.stringify({voteTitle: this.voteTitle, choiceList: this.choiceList})
       })
         .then(el => el.json())
         .then(res => {
-          debugger
-          this.list = res.data;
+          let id = res.data._id
+          console.log(id)
+          this.$toast('你的投票创建成功了！')
+
+          this.$router.push({path:'/detail?id='+id})
+
         })
         .catch(err => {
         })
@@ -60,16 +84,16 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 div h2{
-  color: blue;
+  color: #06afc5;
   text-align: center;
   font-weight: bold;
   font-size: 20px;
-  padding:10px 0 45px 0;
+  padding:10px 0 10px 0;
 }
 input{
-  width: 300px;
+  width: 250px;
   height: 25px;
   border: 1px grey solid;
   border-radius: 3px;
@@ -81,8 +105,8 @@ button{
 }
 
 .add{
-  margin: 30px;
-  width: 100px;
+  margin: 20px;
+  width: 250px;
   height: 30px;
   background: #17dc9a;
   border-radius: 5px;
@@ -102,10 +126,10 @@ button{
   font-size: 16px;
   font-weight: bold;
 }
-.choiceTitle{
-  margin-top: 45px;
+.title{
+  margin-top: 25px;
 }
-.choiceTitle span{
-  margin-right: 25%;
+.title span{
+  margin-right: 50%;
 }
 </style>
