@@ -70,7 +70,6 @@ export default class extends think.controller.rest {
         userName: 'aaa',
         vote: '日本'})
     })
-
     **/
     async putAction(){
       if (!this.id) {
