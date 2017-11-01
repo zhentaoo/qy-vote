@@ -40,6 +40,7 @@ export default class extends Base {
       })
 
       return this.success({
+        title: vote.VoteInfo.voteTitle,
         list: res,
         total: voteResult.length
       });
