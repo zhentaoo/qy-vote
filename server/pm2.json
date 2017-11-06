@@ -1,6 +1,6 @@
 {
   "apps": [{
-    "name": "x",
+    "name": "qy-vote-server",
     "script": "./www/production.js",
     "exec_mode": "fork",
     "instances": 0,
