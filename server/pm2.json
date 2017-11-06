@@ -1,16 +1,15 @@
 {
   "apps": [{
     "name": "x",
-    "script": "www/production.js",
-    "cwd": "/Users/zhentaoo/Code/qy-vote/x",
-    "exec_mode": "cluster",
+    "script": "./www/production.js",
+    "exec_mode": "fork",
     "instances": 0,
     "max_memory_restart": "1G",
     "autorestart": true,
     "node_args": [],
     "args": [],
     "env": {
-      
+
     }
   }]
 }
