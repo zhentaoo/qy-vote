@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/components/index'
-import Create from '@/components/create'
-import Detail from '@/components/detail'
-import Name from '@/components/name'
+import Index from '@/page/index'
+import Create from '@/page/create'
+import Detail from '@/page/detail'
+import Statistics from '@/page/statistics'
+// import StatCanvas from '@/component/statCanvas'
 
 Vue.use(Router)
 
@@ -25,9 +26,14 @@ export default new Router({
       component: Detail
     },
     {
-      path: '/name',
-      name: 'name',
-      component: Name
+      path: '/statistics',
+      name: 'statistics',
+      component: Statistics
     }
+    // {
+    //   path: '/statCanvas',
+    //   name: 'statCanvas',
+    //   component: StatCanvas
+    // }
   ]
 })
