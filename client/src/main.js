@@ -6,6 +6,8 @@ import router from './router';
 import Mint from 'mint-ui';
 import constants from '@/constants/index';
 import './http/index.js';
+import Api from '@/api/index';
+
 Vue.use(Mint);
 
 Vue.config.productionTip = false
@@ -13,23 +15,18 @@ Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
 
 if (to.path == '/detail') {
-
-  let userKey= localStorage.getItem('userKey');
+  var userKey= localStorage.getItem('userKey');
   if(userKey){
     let url = window.location.href;
     let id = url.substring(url.lastIndexOf("=")+1,url.length)
     console.log(id);
     console.log(router);
-    console.log(constants.domain);
 
-    fetch(`${constants.domain}/home/stat/voted?id=${id}&userKey=${userKey}`)
-      .then(
-        el => el.json()
-      )
+    // fetch(`${constants.domain}/home/stat/voted?id=${id}&userKey=${userKey}`)
+    return Api.statVoted(id,userKey)
       .then(res => {
-
         console.log(res);
-        if (res.data.voted==false) {
+        if (res.data.data.voted==false) {
           next()
         }else {
           next(`/statistics?id=${id}`)

@@ -23,6 +23,7 @@
 <script>
 import name from '@/components/name'
 import constants from '@/constants/index'
+import Api from '@/api/index'
 
 export default {
   data(){
@@ -41,6 +42,7 @@ export default {
     name: name
   },
   mounted:function(){
+    debugger
     this.userName = localStorage.getItem('userName');
     this.userKey = localStorage.getItem('userKey');
     if(this.userName){
@@ -48,15 +50,16 @@ export default {
       this.showCreateName=false;
     }
     console.log(this.$route.query.id)
-    fetch(constants.domain+'/home/vote/'+this.$route.query.id)
-      .then(el => el.json())
+    // fetch(constants.domain+'/home/vote/'+this.$route.query.id)
+    return Api.voteDetail(this.$route.query.id)
+      // .then(el => el.json())
       .then(res => {
         console.error(res.data);
         // this.choice = JSON.parse(res.data.VoteInfo).choiceList
-        this.choice = res.data.VoteInfo.choiceList
+        this.choice = res.data.data.VoteInfo.choiceList
         // this.title = JSON.parse(res.data.VoteInfo).voteTitle
-        this.title = res.data.VoteInfo.voteTitle
-        let resKey = res.data.Vote
+        this.title = res.data.data.VoteInfo.voteTitle
+        let resKey = res.data.data.Vote
 
         console.log(this.choice)
       })
@@ -68,16 +71,22 @@ export default {
   },
   methods:{
     vote(){
-      // this.checked=
-      fetch(`${constants.domain}/home/vote/${this.$route.query.id}`, {
-        method: 'PUT',
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "VoteResult="+JSON.stringify({
+      // fetch(`${constants.domain}/home/vote/${this.$route.query.id}`, {
+      //   method: 'PUT',
+      //   headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      //   body: "VoteResult="+JSON.stringify({
+      //     userKey: this.userKey,
+      //     userName: this.userName,
+      //     vote:this.checkedName})
+      // })
+      return Api.vote(
+        this.$route.query.id,
+        'VoteResult='+JSON.stringify({
           userKey: this.userKey,
           userName: this.userName,
-          vote:this.checkedName})
-      })
-        .then(el => el.json())
+          vote:this.checkedName
+        }))
+        // .then(el => el.json())
         .then(res => {
           this.list = res.data;
           this.$router.push({path:`/statistics?id=${this.$route.query.id}`})

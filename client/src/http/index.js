@@ -11,7 +11,7 @@ axios.interceptors.request.use((config) => {
   // if (token) {
   //   config.headers[KEY] = token;
   // }
-  config.url = 'http://10.12.59.81:8360'+config.url
+  config.url = 'http://10.12.53.45:8360'+config.url
   config.timeout = 5000;
   return config;
 }, (error) => {

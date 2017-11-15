@@ -36,6 +36,7 @@
 <script>
 import name from '@/components/name'
 import constants from '@/constants/index'
+import Api from '@/api/index'
 export default {
   data() {
     return {
@@ -70,7 +71,6 @@ export default {
   methods: {
     addFormItem() {
 
-      debugger
       this.addShow=false
       if(!this.choiceList.includes("")){
 
@@ -90,26 +90,20 @@ export default {
       console.log(this.choiceList);
       if (this.voteTitle && this.choiceList.length>=2 && !this.choiceList.includes(undefined)) {
 
-        // this.choiceList.filter(this.checkNull)
-        // console.log(a);
+        // fetch(constants.domain+'/home/vote', {
+        //   method: 'POST',
+        //   headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        //   body: "VoteInfo="+JSON.stringify({voteTitle: this.voteTitle, choiceList: this.choiceList})
+        // })
 
-        // this.choiceList = [];
-        // for (let i=0;i<this.form.length;i++){
-        //   this.choiceList.push(document.getElementsByName('choice')[i].value)
-        // }
-
-        // var str ='&choiceList=' this.choiceList.join('&choiceList=')
-
-        fetch(constants.domain+'/home/vote', {
-          method: 'POST',
-          headers: {"Content-Type": "application/x-www-form-urlencoded"},
-          body: "VoteInfo="+JSON.stringify({voteTitle: this.voteTitle, choiceList: this.choiceList})
-        })
-          .then(el => el.json())
+        Api.create(
+          'VoteInfo='+JSON.stringify({voteTitle: this.voteTitle, choiceList: this.choiceList}),
+          )
           .then(res => {
-            let id = res.data._id
+            let id = res.data.data._id
             console.log(id)
             this.$toast('你的投票创建成功了！')
+            debugger
             this.$router.push({path:'/detail?id='+id})
 
           })
@@ -151,6 +145,10 @@ input{
   border-radius: 3px;
   margin: 5px;
 }
+button:disabled{
+  background-color: #cac0c0;
+  border: 1px #cac0c0 solid
+}
 
 .titleInput{
   width: 280px;
@@ -163,7 +161,7 @@ input{
 }
 
 .add{
-  margin: 20px;
+  margin: 40px 0 20px 0;
   width: 250px;
   height: 35px;
   background: #6ce4ab;

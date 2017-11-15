@@ -48,13 +48,10 @@ export default {
       console.log("stat:", stat);
       return stat.stat(this.$route.query.id)
       .then(res => {
-        //
           this.data = res.data.data.list;
           console.log(this.data );
           this.total = res.data.data.total;
           this.w = window.screen.width/this.total;
-          // console.log();
-
           for (var i = 0; i < res.data.data.list.length; i++) {
             this.choice.push(res.data.data.list[i].name)
           }

@@ -24,6 +24,7 @@
 
 <script>
 import constants from '@/constants/index'
+import Api from '@/api/index'
 export default {
   data(){
     return{
@@ -32,33 +33,19 @@ export default {
     }
   },
   mounted(){
-
-    // fetch('https://www.baidu.com')
-    fetch(`${constants.domain}/home/vote`)
-      .then(el => el.json())
+    this.fetchData()
+  },
+  methods:{
+    fetchData(){
+      
+      return Api.voteList()
       .then(res => {
-
-        // this.list = res.data
-        // this.list = res.data.map(el => {
-        //   try {
-        //
-        //     el.data = JSON.parse(el.data);
-        //   } catch (e) {
-        //
-        //   }
-        //   // el.data = JSON.parse(el.data);
-        //   return el
-        // });
-        this.list=res.data
+        this.list=res.data.data
         console.log(this.list);
       })
       .catch(err => {
         this.$toast('系统异常')
       })
-  },
-  methods:{
-    showVote(){
-
     }
   }
 
