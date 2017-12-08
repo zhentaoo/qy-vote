@@ -1,5 +1,16 @@
 <template lang="html">
   <div class="">
+    <div v-if="isShare">
+      <!-- <div class="" style="position:relative;z-index:100"> -->
+        <share style="position:relative;z-index:100"></share>
+      <!-- </div> -->
+
+      <div class="know" @click="close">
+        我知道了
+      </div>
+      <!-- <button type="button" name="button">我知道了！</button> -->
+    </div>
+
     <h2 style="color:#19bbc7">{{title}}</h2>
     <!-- <span>{{choice}}</span> -->
     <div id="image" >
@@ -12,20 +23,18 @@
           <span class="num">{{n.num}}票</span>
         </div>
         <!-- <div :style="{background:columnColor,width:n.num*50 +'px',height:30+'px',border: '1px solid black'}"> -->
-
-
         <!-- <span>{{n.num}}</span> -->
       </div>
 
     </div>
   </div>
 
-
 </template>
 
 <script>
 import constants from '@/constants/index'
 import stat from '@/api/index'
+import share from '@/components/share'
 export default {
   data(){
     return{
@@ -37,11 +46,15 @@ export default {
       // num:[6,2,0,10,12],
       total:9,
       data:[{name:'死神',num:1},{name:'火影忍者',num:8}],
+      isShare:true
     }
   },
   mounted:function(){
     this.fetchData()
     // this.w = window.screen.width/this.total;
+  },
+  components:{
+    share:share
   },
   methods:{
     fetchData(){
@@ -64,6 +77,9 @@ export default {
         this.$toast('系统异常，请稍后重试')
         console.log(e)
       } )
+    },
+    close(){
+      this.isShare=false
     }
   }
 }
@@ -135,6 +151,20 @@ button{
   z-index: 200;
   position: absolute;
   line-height: 30px;
+}
+.know{
+  width: 90px;
+  height: 20px;
+  border: 1px #11afec solid;
+  border-radius: 5px;
+  padding:10px;
+  position: fixed;
+  z-index: 20000;
+  left:30%;
+  top: 37%;
+  background-color: #11afec;
+  color: white;
+  cursor: pointer;
 }
 
 

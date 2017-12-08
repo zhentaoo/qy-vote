@@ -4,6 +4,7 @@ import Index from '@/page/index'
 import Create from '@/page/create'
 import Detail from '@/page/detail'
 import Statistics from '@/page/statistics'
+import Share from '@/components/share'
 // import StatCanvas from '@/component/statCanvas'
 
 Vue.use(Router)
@@ -29,11 +30,11 @@ export default new Router({
       path: '/statistics',
       name: 'statistics',
       component: Statistics
+    },
+    {
+      path: '/share',
+      name: 'share',
+      component: Share
     }
-    // {
-    //   path: '/statCanvas',
-    //   name: 'statCanvas',
-    //   component: StatCanvas
-    // }
   ]
 })
